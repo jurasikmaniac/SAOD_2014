@@ -1,22 +1,22 @@
-
+п»ї
 struct unitBase{
 	char fio[30];
 	UINT16 numUnit;
 	char job[22];
 	char dob[10];
 };
-//элемент очереди
+//СЌР»РµРјРµРЅС‚ РѕС‡РµСЂРµРґРё
 struct T_Data{
 	unitBase *data;
 	T_Data *next;
 }*index[31];
-//очередь
+//РѕС‡РµСЂРµРґСЊ
 struct T_Queue{
 	T_Data *head;
 	T_Data *tail;
 };
 
-struct node // структура для представления узлов дерева
+struct node // СЃС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ СѓР·Р»РѕРІ РґРµСЂРµРІР°
 {
 	unitBase *key;
 	unsigned char height;
@@ -47,13 +47,13 @@ void merge(T_Queue&, int, T_Queue&, int, T_Queue&);
 unsigned char height(node* );
 int bfactor(node*);
 void fixheight(node*);
-node* rotateright(node*); // правый поворот вокруг p
-node* rotateleft(node*); // левый поворот вокруг q
-node* balance(node*); // балансировка узла p
-node* insert(node*, unitBase *); // вставка ключа k в дерево с корнем p
-node* findmin(node*); // поиск узла с минимальным ключом в дереве p 
+node* rotateright(node*); // РїСЂР°РІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі p
+node* rotateleft(node*); // Р»РµРІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі q
+node* balance(node*); // Р±Р°Р»Р°РЅСЃРёСЂРѕРІРєР° СѓР·Р»Р° p
+node* insert(node*, unitBase *); // РІСЃС‚Р°РІРєР° РєР»СЋС‡Р° k РІ РґРµСЂРµРІРѕ СЃ РєРѕСЂРЅРµРј p
+node* findmin(node*); // РїРѕРёСЃРє СѓР·Р»Р° СЃ РјРёРЅРёРјР°Р»СЊРЅС‹Рј РєР»СЋС‡РѕРј РІ РґРµСЂРµРІРµ p 
 void find(node*, char *);
-node* removemin(node*); // удаление узла с минимальным ключом из дерева p
-node* remove(node*, unitBase *); // удаление ключа k из дерева p
+node* removemin(node*); // СѓРґР°Р»РµРЅРёРµ СѓР·Р»Р° СЃ РјРёРЅРёРјР°Р»СЊРЅС‹Рј РєР»СЋС‡РѕРј РёР· РґРµСЂРµРІР° p
+node* remove(node*, unitBase *); // СѓРґР°Р»РµРЅРёРµ РєР»СЋС‡Р° k РёР· РґРµСЂРµРІР° p
 void freetree(node*);
 #include "AVLtree.cpp"
