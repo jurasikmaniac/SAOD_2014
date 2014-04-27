@@ -5,7 +5,7 @@
 #include <ctype.h> 
 #include <clocale>
 #include <Windows.h>
-
+//привет
 struct node // структура для представления узлов дерева
 {
 	int key;
