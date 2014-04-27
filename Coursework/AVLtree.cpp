@@ -1,19 +1,7 @@
-#include "stdafx.h"
-#include <conio.h>
-#include <cmath>
-#include <cstdio>
-#include <ctype.h> 
-#include <clocale>
-#include <Windows.h>
 
-struct node // структура для представления узлов дерева
-{
-	int key;
-	unsigned char height;
-	node* left;
-	node* right;
-	node(int k) { key = k; left = right = 0; height = 1; }
-};
+
+
+
 
 unsigned char height(node* p)
 {
@@ -70,10 +58,10 @@ node* balance(node* p) // балансировка узла p
 	return p; // балансировка не нужна
 }
 
-node* insert(node* p, int k) // вставка ключа k в дерево с корнем p
+node* insert(node* p, unitBase * k) // вставка ключа k в дерево с корнем p
 {
 	if (!p) return new node(k);
-	if (k<p->key)
+	if (CompareDate(k->dob,p->key->dob)==1)
 		p->left = insert(p->left, k);
 	else
 		p->right = insert(p->right, k);
@@ -85,14 +73,27 @@ node* findmin(node* p) // поиск узла с минимальным ключом в дереве p
 	return p->left ? findmin(p->left) : p;
 }
 
-void find(node* p, int k)
+void find(node* p, char* k)
 {
 	if (p)
 	{
-		if (p->key == k) { _putch((char)k); find(p->right, k); find(p->left, k); }
+		if (CompareDate(k, p->key->dob) == 2)
+		{ 
+			puts("+");
+			printf_s("%s ", p->key->fio);
+			printf_s("%03d\t", p->key->numUnit);
+			printf_s("%s\t", p->key->job);
+			printf_s("%s\n", p->key->dob);
+			find(p->right, k);
+			find(p->left, k);
+		}
 		else
-		if (p->key < k) find(p->right, k); 
-		else find(p->left, k);
+		if (CompareDate(k, p->key->dob) == 0)
+		{
+			find(p->right, k);
+		}
+		else 
+			find(p->left, k);
 
 	}
 }
@@ -104,12 +105,12 @@ node* removemin(node* p) // удаление узла с минимальным ключом из дерева p
 	return balance(p);
 }
 
-node* remove(node* p, int k) // удаление ключа k из дерева p
+node* remove(node* p, unitBase*k) // удаление ключа k из дерева p
 {
 	if (!p) return 0;
-	if (k < p->key)
+	if (CompareDate(k->dob, p->key->dob) == 1)
 		p->left = remove(p->left, k);
-	else if (k > p->key)
+	else if (CompareDate(k->dob, p->key->dob) == 0)
 		p->right = remove(p->right, k);
 	else //  k == p->key 
 	{
@@ -124,19 +125,27 @@ node* remove(node* p, int k) // удаление ключа k из дерева p
 	}
 	return balance(p);
 }
-
-int _tmain(int argc, _TCHAR* argv[])
+void freetree(node* tree)//освободить память из под дерева
 {
-	node *root = NULL;
-	for (size_t i = 0; i < 10; i++)
+	if (tree)
 	{
-
-		root = insert(root, 5);
+		freetree(tree->right);
+		freetree(tree->left);
+		delete tree;
+		count++;
+		tree = NULL;
 	}
-	root = insert(root, 5);
-	root = insert(root, 5);
-	find(root,5);
-	system("pause");
-	return 0;
+	
 }
+
+void showwtree(node* p)
+{
+	if (p)
+	{
+		puts(p->key->dob);
+		showwtree(p->left);
+		showwtree(p->right);
+	}
+}
+
 

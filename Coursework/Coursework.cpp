@@ -3,56 +3,17 @@
 
 #include "stdafx.h"
 #include <conio.h>
-#include "rusmenu.h"
+
 #include <cmath>
 #include <cstdio>
 #include <ctype.h> 
 #include <clocale>
 #include <Windows.h>
+#include "rusmenu.h"
+#include "AVLtree.h"
 
 FILE *fi;
 char checkIndex = 0;
-//данные элемента очереди
-struct unitBase{
-	char fio[30];
-	UINT16 numUnit;
-	char job[22];
-	char dob[10];	
-};
-//элемент очереди
-struct T_Data{
-	unitBase *data;
-	T_Data *next;
-}*index[31];
-//очередь
-struct T_Queue{
-	T_Data *head;
-	T_Data *tail;
-};
-
-
-
-
-inline void SetLoc(UINT);
-inline void PrintMenu();
-void readFilename();
-void OpenBase(T_Queue&);
-int Compare(char *, char *, int);
-int LessDayAndFio(unitBase*, unitBase*);
-void Search();
-
-void addToQueue(T_Queue&, unitBase* );
-void showQueue(T_Queue&);
-void freeQueue(T_Queue&);
-void sortMerge(T_Queue&);
-void split(T_Queue&, T_Queue&, T_Queue&, int&);
-void merge(T_Queue&, int, T_Queue&, int, T_Queue&);
-
-
-
-
-
-
 
 
 
@@ -71,12 +32,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		PrintMenu();
 		switch (_getch())
 		{
-		case '1': OpenBase(queue); system("pause");	break;
-		case '2': showQueue(queue);	system("pause");break;
-		case '3': sortMerge(queue);	system("pause"); break;
-		case '4': Search();	system("pause"); break;
-		case '5': freeQueue(queue); return 0;
-		default:					break;
+		case '1':	OpenBase(queue);	system("pause");break;
+		//case '1':	for (int i = 0; i < 1000; i ++ ){ OpenBase(queue); }	system("pause"); break;
+		case '2':	showQueue(queue);	system("pause");break;
+		case '3':	sortMerge(queue);	system("pause");break;
+		case '4':	Search();			system("pause");break;
+		case '5':	freeQueue(queue);	return 0;		
+		default:	break;
 		}
 	}
 	freeQueue(queue);
@@ -122,7 +84,8 @@ void OpenBase(T_Queue& b)
 		addToQueue(b, p);
 		
 	}
-	//free(p);
+	fclose(fi);
+	
 	
 }
 
@@ -152,7 +115,7 @@ void readFilename()
 	err = fopen_s(&fi, FileName, "rb");
 		if (err == 0)
 		{
-			printf_s("The file ""%s"" was opened\n", FileName);
+			//printf_s("The file ""%s"" was opened\n", FileName);
 		}
 		else
 		{
@@ -366,7 +329,7 @@ void sortMerge(T_Queue &queue)
 	checkIndex = 1;
 }
 
-//Сравнение(Лексикографическое) строк 1 если <=, 0 если >
+//Сравнение(Лексикографическое) строк 1 если s1<s2, 2 если S1=S2, 0 если S1>S2
 int Compare(char s1[], char s2[], int number)
 {
 	int i;
@@ -377,7 +340,47 @@ int Compare(char s1[], char s2[], int number)
 		else if (s1[i]>s2[i]) return 0;
 		else i++;
 	} while (i<number);
-	return 1;
+	return 2;
+}
+//Сравнение даты рождения  1 если < 2 если =, 0 если >
+int CompareDate(char *s1, char *s2)
+{
+	char ss1[2], ss2[2];
+	int result;
+	ss1[0] = s1[6]; ss1[1] = s1[7];
+	ss2[0] = s2[6]; ss2[1] = s2[7];
+	result = Compare(ss1, ss2, 2);
+	if (result == 1)
+	{
+		return 1;
+	}
+	if (result == 0)
+	{
+		return 0;
+	}
+	ss1[0] = s1[3]; ss1[1] = s1[4];
+	ss2[0] = s2[3]; ss2[1] = s2[4];
+	result = Compare(ss1, ss2, 2);
+	if (result == 1)
+	{
+		return 1;
+	}
+	if (result == 0)
+	{
+		return 0;
+	}
+	ss1[0] = s1[0]; ss1[1] = s1[1];
+	ss2[0] = s2[0]; ss2[1] = s2[1];
+	result = Compare(ss1, ss2, 2);
+	if (result == 1)
+	{
+		return 1;
+	}
+	if (result == 0)
+	{
+		return 0;
+	}
+	return 2;
 }
 //сравнение дня рождения+ФИО
 int LessDayAndFio(unitBase *p, unitBase *q)
@@ -387,7 +390,7 @@ int LessDayAndFio(unitBase *p, unitBase *q)
 	else if (p->dob[0]>q->dob[0]) return 0;
 	else if (p->dob[1]<q->dob[1]) return 1;
 	else if (p->dob[1]>q->dob[1]) return 0;
-	else if (Compare(p->fio, q->fio, 30) == 1) return 1;
+	else if (Compare(p->fio, q->fio, 30)) return 1;
 	else return 0;
 }
 
@@ -413,6 +416,7 @@ void Search()
 	Key--;
 	T_Data *temp;
 	T_Queue Found;
+	node *root=NULL;
 	Found.head = Found.tail = NULL;
 	temp = index[Key];
 	
@@ -424,23 +428,35 @@ void Search()
 		{
 			temp = NULL;
 			break;
-		}
-		
+		}		
 		addToQueue(Found, temp->data);
 		temp = temp->next;		
 	}
 	temp = Found.head;
-	//Выводим на печать содержимое очереди
+	count = 0;
+	//Выводим на печать содержимое очереди и заполняем дерево
 	while (temp != NULL)
 	{		
 		printf_s("%s ", temp->data->fio);
 		printf_s("%03d\t", temp->data->numUnit);
 		printf_s("%s\t", temp->data->job);
-		printf_s("%s\n", temp->data->dob);
-		
+		printf_s("%s\n", temp->data->dob);	
+		root = insert(root, temp->data);
 		temp = temp->next;
+		count++;
 	}
+	printf_s("added  lists:%u\n", count);
+	char date[10];
+	//showwtree(root);
+
+	puts(TextMenuId[7]);
+	fflush(stdin);
+	scanf_s("%s", date, _countof(date));
+	find(root, date);
+	count = 0;
 	//Очищаем очередь после окончания поиска
 	freeQueue(Found);
-	
+	freetree(root);
+	root = NULL;
+	printf_s("deleted lists:%u\n",count);	
 }
