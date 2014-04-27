@@ -1,4 +1,4 @@
-
+п»ї
 
 
 
@@ -20,7 +20,7 @@ void fixheight(node* p)
 	p->height = (hl>hr ? hl : hr) + 1;
 }
 
-node* rotateright(node* p) // правый поворот вокруг p
+node* rotateright(node* p) // РїСЂР°РІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі p
 {
 	node* q = p->left;
 	p->left = q->right;
@@ -30,7 +30,7 @@ node* rotateright(node* p) // правый поворот вокруг p
 	return q;
 }
 
-node* rotateleft(node* q) // левый поворот вокруг q
+node* rotateleft(node* q) // Р»РµРІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі q
 {
 	node* p = q->right;
 	q->right = p->left;
@@ -40,7 +40,7 @@ node* rotateleft(node* q) // левый поворот вокруг q
 	return p;
 }
 
-node* balance(node* p) // балансировка узла p
+node* balance(node* p) // Р±Р°Р»Р°РЅСЃРёСЂРѕРІРєР° СѓР·Р»Р° p
 {
 	fixheight(p);
 	if (bfactor(p) == 2)
@@ -55,10 +55,10 @@ node* balance(node* p) // балансировка узла p
 			p->left = rotateleft(p->left);
 		return rotateright(p);
 	}
-	return p; // балансировка не нужна
+	return p; // Р±Р°Р»Р°РЅСЃРёСЂРѕРІРєР° РЅРµ РЅСѓР¶РЅР°
 }
 
-node* insert(node* p, unitBase * k) // вставка ключа k в дерево с корнем p
+node* insert(node* p, unitBase * k) // РІСЃС‚Р°РІРєР° РєР»СЋС‡Р° k РІ РґРµСЂРµРІРѕ СЃ РєРѕСЂРЅРµРј p
 {
 	if (!p) return new node(k);
 	if (CompareDate(k->dob,p->key->dob)==1)
@@ -68,7 +68,7 @@ node* insert(node* p, unitBase * k) // вставка ключа k в дерево с корнем p
 	return balance(p);
 }
 
-node* findmin(node* p) // поиск узла с минимальным ключом в дереве p 
+node* findmin(node* p) // РїРѕРёСЃРє СѓР·Р»Р° СЃ РјРёРЅРёРјР°Р»СЊРЅС‹Рј РєР»СЋС‡РѕРј РІ РґРµСЂРµРІРµ p 
 {
 	return p->left ? findmin(p->left) : p;
 }
@@ -97,7 +97,7 @@ void find(node* p, char* k)
 
 	}
 }
-node* removemin(node* p) // удаление узла с минимальным ключом из дерева p
+node* removemin(node* p) // СѓРґР°Р»РµРЅРёРµ СѓР·Р»Р° СЃ РјРёРЅРёРјР°Р»СЊРЅС‹Рј РєР»СЋС‡РѕРј РёР· РґРµСЂРµРІР° p
 {
 	if (p->left == 0)
 		return p->right;
@@ -105,7 +105,7 @@ node* removemin(node* p) // удаление узла с минимальным ключом из дерева p
 	return balance(p);
 }
 
-node* remove(node* p, unitBase*k) // удаление ключа k из дерева p
+node* remove(node* p, unitBase*k) // СѓРґР°Р»РµРЅРёРµ РєР»СЋС‡Р° k РёР· РґРµСЂРµРІР° p
 {
 	if (!p) return 0;
 	if (CompareDate(k->dob, p->key->dob) == 1)
@@ -125,7 +125,7 @@ node* remove(node* p, unitBase*k) // удаление ключа k из дерева p
 	}
 	return balance(p);
 }
-void freetree(node* tree)//освободить память из под дерева
+void freetree(node* tree)//РѕСЃРІРѕР±РѕРґРёС‚СЊ РїР°РјСЏС‚СЊ РёР· РїРѕРґ РґРµСЂРµРІР°
 {
 	if (tree)
 	{
