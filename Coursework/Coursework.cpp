@@ -2,17 +2,11 @@
 //
 
 #include "stdafx.h"
-#include <conio.h>
-
-#include <cmath>
-#include <cstdio>
-#include <ctype.h> 
-#include <clocale>
-#include <Windows.h>
 #include "rusmenu.h"
 #include "AVLtree.h"
 
 FILE *fi;
+//флаг сортировки
 char checkIndex = 0;
 
 
@@ -33,7 +27,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		switch (_getch())
 		{
 		case '1':	OpenBase(queue);	system("pause");break;
-		//case '1':	for (int i = 0; i < 1000; i ++ ){ OpenBase(queue); }	system("pause"); break;
+		//можно занять 1.5GB оперативной памяти!
+		//case '1':	for (int i = 0; i < 1000; i ++ ){ OpenBase(queue); }system("pause"); break;
 		case '2':	showQueue(queue);	system("pause");break;
 		case '3':	sortMerge(queue);	system("pause");break;
 		case '4':	Search();			system("pause");break;
@@ -45,11 +40,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	system("pause");
 	return 0;
 }
-
 //Устанавливает кодировку ввода и вывода в консоли
 inline void SetLoc(UINT loc)
-{	
-	
+{		
 	SetConsoleCP(loc);
 	SetConsoleOutputCP(loc);
 }
@@ -81,17 +74,15 @@ void OpenBase(T_Queue& b)
 		fread_s(p->dob, sizeof(p->dob), sizeof(p->dob), 1, fi);
 		//fseek(fi, 2, SEEK_CUR);
 
-		addToQueue(b, p);
-		
+		addToQueue(b, p);		
 	}
-	fclose(fi);
-	
-	
+	fclose(fi);	
+	checkIndex = 0;
 }
 
 
 
-// функция добавления в очередь
+//добавления в очередь
 void addToQueue(T_Queue &queue, unitBase *num)
 {
 	T_Data *p;
@@ -120,11 +111,9 @@ void readFilename()
 		else
 		{
 			printf_s("The file ""%s"" was not opened, try again\n", FileName);
-		}
-	
+		}	
 }
-
-//функиця оотображения элементов базы
+//отображения элементов базы
 void showQueue(T_Queue &queue)
 {
 	T_Data *p;
@@ -147,8 +136,7 @@ void showQueue(T_Queue &queue)
 	}
 	printf("\n");
 }
-
-// функция освобождения памяти из под списка
+//освобождения памяти из под списка
 void freeQueue(T_Queue &queue)
 {
 	T_Data *p, *temp;
@@ -161,8 +149,7 @@ void freeQueue(T_Queue &queue)
 	}
 	queue.head = queue.tail = NULL;
 }
-
-// функция объединения списков
+//объединения списков
 void merge(T_Queue &queue_a, int q, T_Queue &queue_b, int r, T_Queue &queue_c)
 {
 	T_Data *a, *b;
@@ -236,7 +223,7 @@ void merge(T_Queue &queue_a, int q, T_Queue &queue_b, int r, T_Queue &queue_c)
 	queue_b.head = b;
 }
 
-// функция разделения списка
+//разделения списка
 void split(T_Queue &queue, T_Queue &queue_a, T_Queue &queue_b, int &n)
 {
 	T_Data *k, *p;
@@ -329,8 +316,10 @@ void sortMerge(T_Queue &queue)
 	checkIndex = 1;
 }
 
-//Сравнение(Лексикографическое) строк 1 если s1<s2, 2 если S1=S2, 0 если S1>S2
+//Сравнение(Лексикографическое) строк
+//1 если s1<s2, 2 если S1=S2, 0 если S1>S2
 int Compare(char s1[], char s2[], int number)
+
 {
 	int i;
 	i = 0;
@@ -393,13 +382,14 @@ int LessDayAndFio(unitBase *p, unitBase *q)
 	else if (Compare(p->fio, q->fio, 30)) return 1;
 	else return 0;
 }
-
 //поиск по ключу в отсортированной базе, затем постороение дерева и поиск в нём
 void Search()
+
 {
 	//Если база неотсортирована, то выходим
 	if (!checkIndex)
 	{
+		puts("Sort base");
 		return;
 	}
 	int Key = 0;
@@ -456,6 +446,7 @@ void Search()
 	count = 0;
 	//Очищаем очередь после окончания поиска
 	freeQueue(Found);
+	////Очищаем дерево после окончания поиска
 	freetree(root);
 	root = NULL;
 	printf_s("deleted lists:%u\n",count);	

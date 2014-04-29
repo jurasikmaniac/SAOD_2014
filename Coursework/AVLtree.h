@@ -1,4 +1,4 @@
-﻿
+﻿//структура с данными
 struct unitBase{
 	char fio[30];
 	UINT16 numUnit;
@@ -15,8 +15,8 @@ struct T_Queue{
 	T_Data *head;
 	T_Data *tail;
 };
-
-struct node // структура для представления узлов дерева
+// структура для представления узлов дерева
+struct node 
 {
 	unitBase *key;
 	unsigned char height;
@@ -24,8 +24,8 @@ struct node // структура для представления узлов �
 	node* right;
 	node(unitBase * k) { key = k; left = right = 0; height = 1; }
 };
+//контроль удаленных узлов дерева
 long count = 0;
-
 
 inline void SetLoc(UINT);
 inline void PrintMenu();
@@ -47,13 +47,13 @@ void merge(T_Queue&, int, T_Queue&, int, T_Queue&);
 unsigned char height(node* );
 int bfactor(node*);
 void fixheight(node*);
-node* rotateright(node*); // правый поворот вокруг p
-node* rotateleft(node*); // левый поворот вокруг q
-node* balance(node*); // балансировка узла p
-node* insert(node*, unitBase *); // вставка ключа k в дерево с корнем p
-node* findmin(node*); // поиск узла с минимальным ключом в дереве p 
+node* rotateright(node*);
+node* rotateleft(node*);
+node* balance(node*);
+node* insert(node*, unitBase *);
+node* findmin(node*);
 void find(node*, char *);
-node* removemin(node*); // удаление узла с минимальным ключом из дерева p
-node* remove(node*, unitBase *); // удаление ключа k из дерева p
+node* removemin(node*);
+node* remove(node*, unitBase *);
 void freetree(node*);
 #include "AVLtree.cpp"

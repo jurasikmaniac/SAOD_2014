@@ -1,26 +1,31 @@
-﻿
-
-
-
-
-unsigned char height(node* p)
+﻿// высота узла
+unsigned char height(node* p) 
 {
 	return p ? p->height : 0;
 }
-
-int bfactor(node* p)
+// для расчета фактора баланса
+int bfactor(node* p) 
 {
 	return height(p->right) - height(p->left);
 }
-
-void fixheight(node* p)
+// правка высоты узла
+void fixheight(node* p) 
 {
 	unsigned char hl = height(p->left);
-	unsigned char hr = height(p->right);
-	p->height = (hl>hr ? hl : hr) + 1;
+	unsigned char hr = height(p->right);			
+	if (hl>hr)
+	{
+		p->height = hl + 1;
+	}
+	else
+	{
+		p->height = hr + 1;
+	}
+	
+	//p->height = (hl>hr ? hl : hr) + 1;
 }
-
-node* rotateright(node* p) // правый поворот вокруг p
+// правый поворот вокруг p
+node* rotateright(node* p) 
 {
 	node* q = p->left;
 	p->left = q->right;
@@ -29,8 +34,8 @@ node* rotateright(node* p) // правый поворот вокруг p
 	fixheight(q);
 	return q;
 }
-
-node* rotateleft(node* q) // левый поворот вокруг q
+// левый поворот вокруг q
+node* rotateleft(node* q) 
 {
 	node* p = q->right;
 	q->right = p->left;
@@ -39,8 +44,8 @@ node* rotateleft(node* q) // левый поворот вокруг q
 	fixheight(p);
 	return p;
 }
-
-node* balance(node* p) // балансировка узла p
+// балансировка узла p
+node* balance(node* p) 
 {
 	fixheight(p);
 	if (bfactor(p) == 2)
@@ -57,8 +62,8 @@ node* balance(node* p) // балансировка узла p
 	}
 	return p; // балансировка не нужна
 }
-
-node* insert(node* p, unitBase * k) // вставка ключа k в дерево с корнем p
+// вставка ключа k в дерево с корнем p
+node* insert(node* p, unitBase * k) 
 {
 	if (!p) return new node(k);
 	if (CompareDate(k->dob,p->key->dob)==1)
@@ -67,10 +72,15 @@ node* insert(node* p, unitBase * k) // вставка ключа k в дерев
 		p->right = insert(p->right, k);
 	return balance(p);
 }
-
-node* findmin(node* p) // поиск узла с минимальным ключом в дереве p 
+// поиск узла с минимальным ключом в дереве p
+node* findmin(node* p)  
 {
-	return p->left ? findmin(p->left) : p;
+	if (p->left)
+	{
+		return findmin(p->left);
+	}
+	return p;
+	//return p->left ? findmin(p->left) : p;
 }
 
 void find(node* p, char* k)
@@ -97,15 +107,16 @@ void find(node* p, char* k)
 
 	}
 }
-node* removemin(node* p) // удаление узла с минимальным ключом из дерева p
+// удаление узла с минимальным ключом из дерева p
+node* removemin(node* p) 
 {
 	if (p->left == 0)
 		return p->right;
 	p->left = removemin(p->left);
 	return balance(p);
 }
-
-node* remove(node* p, unitBase*k) // удаление ключа k из дерева p
+// удаление ключа k из дерева p
+node* remove(node* p, unitBase*k) 
 {
 	if (!p) return 0;
 	if (CompareDate(k->dob, p->key->dob) == 1)
@@ -125,7 +136,8 @@ node* remove(node* p, unitBase*k) // удаление ключа k из дере
 	}
 	return balance(p);
 }
-void freetree(node* tree)//освободить память из под дерева
+//освободить память из под дерева
+void freetree(node* tree)
 {
 	if (tree)
 	{
@@ -137,8 +149,8 @@ void freetree(node* tree)//освободить память из под дер�
 	}
 	
 }
-
-void showwtree(node* p)
+//показать все элементы дерева
+void showwtree(node* p) 
 {
 	if (p)
 	{
@@ -147,5 +159,3 @@ void showwtree(node* p)
 		showwtree(p->right);
 	}
 }
-
-
