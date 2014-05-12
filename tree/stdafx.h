@@ -21,7 +21,7 @@ struct node
 {
 	INT32 Data;
 	node* left;
-	node* right;
+	node* right;	
 	node(INT32 k) { Data = k; left = right = NULL; }
 };
 
