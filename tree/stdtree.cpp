@@ -4,13 +4,13 @@ inline void SetLoc(UINT loc)
 	SetConsoleCP(loc);
 	SetConsoleOutputCP(loc);
 }
-//Вставка в дерево
+//Вставка в дерево поиска, рекурсивная
 node* insert(node* p, INT32 k)
 {
 	if (!p) return new node(k);
 	if (p->Data == k)
 	{
-		printf_s("данные с ключом %d уже есть", k);
+		printf_s("\nданные с ключом %d уже есть\n", k);
 		return p;
 	}
 	if (k < p->Data)
@@ -18,6 +18,29 @@ node* insert(node* p, INT32 k)
 	else
 		p->right = insert(p->right, k);
 	return p;
+}
+//Вставка в дерево, алгоритм методички, немного доведенный до рабочего, после завершения функции все указатели обнулялись,ВСЕ!
+//Возможно это сработает и с удалением
+node* insertRTS(node *root, INT32 D)
+{
+	node **p = &root;//указатель на указатель
+	while (*p != NULL)
+	{
+		if (D < (*p)->Data) p = &((*p)->left);//меньше, идем налево
+		else if (D > (*p)->Data) p = &((*p)->right);//больше идем направо
+		else
+		{
+			printf_s("\nданные с ключом %d уже есть\n", D);//иначе D уже есть
+			return root;
+		}
+	}
+	if (*p == NULL)
+	{
+		*p = new node(D);
+		(*p)->left = NULL;
+		(*p)->right = NULL;
+	}
+	return root;
 }
 
 //Обход слева направо(p: pVertex)
@@ -151,19 +174,23 @@ bool checksearch(node* p)
 
 
 //поиск вершины с ключом Х
-node* search(node *p, INT32 X)
+node* search(node *p, INT32 X,INT32 &comp)
 {
 	if (p)
 	{
+		comp++;
 		if (p->Data < X)
 		{
-			search(p->right, X);
+			
+			search(p->right, X, comp);
 		}
 		else
 		{
+			comp++;
 			if (p->Data > X)
 			{
-				search(p->left, X);
+				
+				search(p->left, X, comp);
 			}
 			else
 			{
@@ -223,7 +250,8 @@ node* IBTS(int* s_arr, INT32 L, INT32 R)
 }
 
 //удаление вершины методичка, не работает
-void del(node *root, INT32 X)
+//переделал, всё арвно не заработало
+node* del(node *root, INT32 X)
 {
 	node *s = NULL;
 	node *r = NULL;
@@ -257,9 +285,10 @@ void del(node *root, INT32 X)
 		}
 	}
 	delete q;
+	return root;
 	
 }
-
+//удаление вершины
 node *_del(node *root, INT32 key)
 {
 	node *p = NULL;
@@ -297,4 +326,201 @@ node *_del(node *root, INT32 key)
 	if (root->Data < key) root->right = _del(root->right, key);
 	else root->left = _del(root->left, key);
 	return root;
+}
+
+
+//уникакальное случайное число
+void gen_random_uniq(int arr_size, int *parr, int range_min, int range_max) {
+
+	int i, j;
+	int dup_flag;
+	int rand_val, range_width = range_max - range_min + 1;
+
+
+	if (range_width<1 || arr_size<0 || arr_size>range_width) {
+		fprintf(stderr, "gen_random_uniq(): Invalid arguments\n"); exit(1);
+	}
+
+	for (i = 0; i<arr_size; i++) {
+		for (;;) {
+			rand_val = range_min + rand() % range_width;
+			dup_flag = 0;
+			for (j = 0; j<i; j++) {
+				if (rand_val == parr[j]) { dup_flag = 1; break; }
+			}
+			if (!dup_flag) { break; }
+		}
+		parr[i] = rand_val;
+	}
+
+} /* gen_random_uniq() */
+
+//информация по древву
+inline void show(node* root)
+{	
+	printf_s("Размер дерева = %d\n", sizetree(root));
+	printf_s("сумма длин = %d\n", slp(root, 1));
+	printf_s("высота дерева = %d\n", heighttree(root));
+	printf_s("средняя высота = %6.3f\n", meanheight(root));
+	printf_s("CRC tree = %d\n", CRCtree(root));
+	printf_s("Дерево поиска? %c\n", checksearch(root) ? 'Y' : 'N');
+}
+
+
+
+/* LL поворот
+q = p→Left;
+q→Balance = 0;
+p→Balance = 0;
+p→Left = q→Right;
+q→Right = p;
+p = q;
+*/
+
+/* LR поворот
+q = p→Left; r = q→Right;
+IF (r→Balance<0){ p→Balance = +1} ELSE{ p→Balance = 0;}
+IF (r→Balance>0){ q→Balance = –1} ELSE{ q→Balance = 0;}
+r→Balance = 0;
+p→Left = r→Right;
+q→Right = r→Left;
+r→Left = q;
+r→Right = p;
+p = r;
+*/
+
+/* RR поворот
+q = p→Right;
+q→Balance = 0;
+p→Balance = 0;
+p→ Right= q→ Left;
+q→ Left = p;
+p = q;
+*/
+
+/* RL поворот
+q = p→ Right;
+r = q→ Left;
+IF (r→Balance>0){ p→Balance = -1;} ELSE{ p→Balance = 0;}
+IF (r→Balance<0){ q→Balance = 1;} ELSE {q→Balance = 0;}
+r→Balance = 0;
+p→ Right= r→ Left;
+q→ Left= r→ Right;
+r→ Left = p;
+r→Right = q;
+p = r;
+*/
+
+bool rost = false;
+int R = 0;
+
+
+void insertAVL(node **p, INT32 D)
+{
+	node *q = NULL;
+	node *r = NULL;
+	if (*p==NULL)
+	{
+		*p = new node(D, 0);
+		rost = true;		
+	}
+	else
+	{
+		if ((*p)->Data > D)
+		{
+			insertAVL(&(*p)->left, D);
+			if (rost)//выросла левая ветвь
+			{
+				if ((*p)->Balance > 0)
+				{
+					(*p)->Balance = 0;
+					rost = false;
+				}
+				else 
+				if ((*p)->Balance == 0)
+				{
+					(*p)->Balance = (-1);
+				}
+				else 
+				{
+					R++;
+					if ((*p)->left->Balance < 0)
+					{
+						q = (*p)->left;
+						q->Balance = 0;
+						(*p)->Balance = 0;
+						(*p)->left = q->right;
+						q->right = (*p);
+						(*p) = q;
+					}
+					else
+					{
+						q = (*p)->left; r = q->right;
+						if (r->Balance<0){ (*p)->Balance = 1; }
+						else{ (*p)->Balance = 0; }
+						if (r->Balance>0){ q->Balance = (-1); }
+						else{ q->Balance = 0; }
+						r->Balance = 0;
+						(*p)->left = r->right;
+						q->right = r->left;
+						r->left = q;
+						r->right = (*p);
+						(*p) = r;
+					}
+					rost = false;
+				}
+			}
+		}
+			else if ((*p)->Data < D)
+			{
+				insertAVL(&(*p)->right, D);
+				if (rost)//выросла правая ветвь
+				{
+					if ((*p)->Balance < 0)
+					{
+						(*p)->Balance = 0;
+						rost = false;
+					}
+					else if ((*p)->Balance == 0)
+					{
+						(*p)->Balance = 1;
+					}
+					else
+					{
+						R++;
+						if ((*p)->right->Balance > 0)
+						{
+							q = (*p)->right;
+							q->Balance = 0;
+							(*p)->Balance = 0;
+							(*p)->right = q->left;
+							q->left = (*p);
+							(*p) = q;
+						}
+						else
+						{
+							q = (*p)->right;
+							r = q->left;
+							if (r->Balance > 0){ (*p)->Balance = -1; }
+							else{ (*p)->Balance = 0; }
+							if (r->Balance < 0){ q->Balance = 1; }
+							else{ q->Balance = 0; }
+							r->Balance = 0;
+							(*p)->right = r->left;
+							q->left = r->right;
+							r->left = (*p);
+							r->right = q;
+							(*p) = r;
+
+						}
+						rost = false;
+					}
+				}
+				else
+				{
+					//puts("Такая вершина уже есть");
+				}
+			}
+		
+	}
 }

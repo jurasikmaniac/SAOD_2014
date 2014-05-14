@@ -3,53 +3,127 @@
 
 #include "stdafx.h"
 #include "stdtree.cpp"
+node* root1 = NULL;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	SetLoc(1251);
 	node* root = NULL;
-	bool b;
-	int arr[9] = {0,2,1,3,5,4,6,7,8};
-/*	Лабараторная работа №1
+	nodeAVL* rootAVL = NULL;
+	
+	int arr[1000], n,key, comp = 0;
+	while (true)
+	{
+
+		puts("1 лаба");
+		puts("2 лаба");
+		puts("3 лаба");
+		puts("0 выход");
+		
+		switch (_getch())
+		{
+
+		case '1':			/*	Лабараторная работа №1
 			2
 		   / \
 		  1   3
 			   \
-		        5
+			    5
 			   / \
 			  4   6
-	
-	*/
-	
-	root = insert(root, 2);
-	root = insert(root, 1);
-	root = insert(root, 3);
-	root = insert(root, 5);
-	root = insert(root, 4);
-	root = insert(root, 6);
-	printf_s("Size tree = %d\n", sizetree(root));
-	printf_s("H tree = %d\n", heighttree(root));
-	printf_s("mean H tree = %6.3f\n", meanheight(root));
-	printf_s("CRC tree = %d\n", CRCtree(root));
-	b = checksearch(root);
-	printf_s("search tree ? %c\n", b? 'Y':'N');
-	roundLToR(root);
-	search(root, 2);
-	root = _del(root, 5);
-	b = checksearch(root);
-	printf_s("search tree ? %c\n", b ? 'Y' : 'N');
-	printf_s("CRC tree = %d\n", CRCtree(root));
-	roundLToR(root);
-	root = _del(root, 3);
-	b = checksearch(root);
-	printf_s("search tree ? %c\n", b ? 'Y' : 'N');
-	printf_s("CRC tree = %d\n", CRCtree(root));
-	roundLToR(root);
-	qs(arr, 0, 8);
-	node *ibts = IBTS(arr, 0, 8);
-	roundLToR(ibts);
+
+						*/
+
+			root = insert(root, 2);
+			root = insert(root, 1);
+			root = insert(root, 3);
+			root = insert(root, 5);
+			root = insert(root, 4);
+			root = insert(root, 6);
+			
+			/*root = insertRTS(root, 2);
+			root = insertRTS(root, 1);
+			root = insertRTS(root, 3);
+			root = insertRTS(root, 5);
+			root = insertRTS(root, 4);
+			root = insertRTS(root, 6);*/
+			show(root);
+			//root = _del(root, 5);
+			roundLToR(root);
+			freetree(root);
+			root = NULL;
+				
+			
+			system("pause");
+			break;
+		case '2':
+			/*
+			Лабораторная работа №2
+			*/
+			srand(time(NULL));
+			//СДП
+			puts("Введите число вершин СДП");
+			n = 0;
+			scanf_s("%d", &n);
+			gen_random_uniq(n, arr, 1, n);
+			for (int i = 0; i < n; i++)
+			{
+				root = insert(root, arr[i]);
+			}
+			show(root);
+			puts("введите ключ:");
+			scanf_s("%d", &key);
+			search(root, key, comp);
+			printf_s("\nколичество сравнений: %d\n", comp);
+			comp = 0;
+			//roundLToR(root);
+			freetree(root);
+			root = NULL;
+			//ИСДП
+			puts("Введите число вершин ИСДП");
+			n = 0;
+			scanf_s("%d", &n);
+			gen_random_uniq(n, arr, 1, n);
+			qs(arr, 0, n - 1);
+			root = IBTS(arr, 0, n - 1);
+			show(root);
+			puts("введите ключ:");
+			scanf_s("%d", &key);
+			search(root, key, comp);
+			printf_s("\nколичество сравнений: %d\n", comp);
+			comp = 0;
+			freetree(root);
+			root = NULL;
+			system("pause");
+			break;
+			/*
+			Лабораторная работа №3
+			*/
+		case '3':
+			srand(time(NULL));
+			//AVL
+			puts("Введите число вершин AVL");
+			n = 0;
+			scanf_s("%d", &n);
+			gen_random_uniq(n, arr, 1, n);
+			for (int i = 0; i < n; i++)
+			{
+				insertAVL(&root1, arr[i]);
+			}
+			show(root1);
+			printf_s("\nСреднее количество поворотов %6.3f\n", (float)R / n);
+			
+			freetree(root1);
+			root1 = NULL;
+			system("pause");
+			break;
+		case '0': return 0;
+		default:
+			break;
+		}
+	}
 	system("pause");
-	freetree(root);
-	freetree(ibts);
+
+	
 	return 0;
 }
