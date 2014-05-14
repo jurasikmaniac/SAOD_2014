@@ -11,13 +11,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	node* root = NULL;
 	nodeAVL* rootAVL = NULL;
 	
-	int arr[1000], n,key, comp = 0;
+	int arr[10000], n,key, comp = 0;
 	while (true)
 	{
 
 		puts("1 лаба");
 		puts("2 лаба");
 		puts("3 лаба");
+		puts("4 лаба");
 		puts("0 выход");
 		
 		switch (_getch())
@@ -113,6 +114,22 @@ int _tmain(int argc, _TCHAR* argv[])
 			show(root1);
 			printf_s("\nСреднее количество поворотов %6.3f\n", (float)R / n);
 			
+			freetree(root1);
+			root1 = NULL;
+			system("pause");
+			break;
+		case '4':
+			srand(time(NULL));
+			//AVL
+			puts("Введите число вершин ДБ-дерева");
+			n = 0;
+			scanf_s("%d", &n);
+			gen_random_uniq(n, arr, 1, n);
+			for (int i = 0; i < n; i++)
+			{
+				insertBB(&root1, arr[i]);
+			}
+			show(root1);
 			freetree(root1);
 			root1 = NULL;
 			system("pause");

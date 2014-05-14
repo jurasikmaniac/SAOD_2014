@@ -100,7 +100,7 @@ INT32 sizetree(node* p)
 		return 1 + sizetree(p->left) + sizetree(p->right);
 	}
 }
-//Высота дерева
+//Высота дерева, нуууу очень долго считает при n>1000
 INT32 heighttree(node* p)
 {
 	if (p == NULL)
@@ -412,9 +412,13 @@ p = r;
 */
 
 bool rost = false;
+
+bool HR = true;
+bool VR = true;
+
 int R = 0;
 
-
+//Добавление в АВЛ дерево
 void insertAVL(node **p, INT32 D)
 {
 	node *q = NULL;
@@ -522,5 +526,76 @@ void insertAVL(node **p, INT32 D)
 				}
 			}
 		
+	}
+}
+
+//Добавление в БД дерево
+void insertBB(node **p, INT32 D)
+{
+	node *q = NULL;	
+	if (*p == NULL)
+	{
+		*p = new node(D, 0);
+		VR = true;
+	}
+	else
+	{
+		if ((*p)->Data > D)
+		{
+			insertBB(&(*p)->left, D);
+			if (VR == true)
+			{
+				if ((*p)->Balance == 0)
+				{
+					q = (*p)->left;
+					(*p)->left = q->right;
+					q->right = (*p);
+					(*p) = q;
+					q->Balance = 1;
+					VR  = false; 
+					HR = true;
+				}
+				else
+				{
+					(*p)->Balance = 0;
+					HR = true;
+				}
+			}
+			else
+			{
+				HR = false;
+			}
+		}
+		else
+		{
+			if ((*p)->Data < D)
+			{
+				insertBB(&(*p)->right, D);
+				if (VR = true)
+				{
+					(*p)->Balance = 1;
+					VR = false;
+					HR = true;
+				}
+				else
+				{
+					if (HR == true)
+					{
+						if ((*p)->Balance > 0)
+						{
+							q = (*p)->right;
+							(*p)->right = q->left;
+							(*p)->Balance = 0;
+							q->Balance = 0;
+							q->left = (*p);
+							(*p) = q;
+							VR = true;
+							HR = false;
+						}
+					}
+				}
+			}
+		}
+
 	}
 }
