@@ -35,4 +35,10 @@ struct nodeAVL
 	nodeAVL* right;
 	nodeAVL(INT32 k, INT8  B) { Data = k; Balance = B; left = right = NULL; }
 };
+struct A_1
+{
+	INT32 wes;
+	bool use;
+
+};
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

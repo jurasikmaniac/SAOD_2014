@@ -537,6 +537,7 @@ void insertBB(node **p, INT32 D)
 	{
 		*p = new node(D, 0);
 		VR = true;
+		HR = false;
 	}
 	else
 	{
@@ -571,7 +572,7 @@ void insertBB(node **p, INT32 D)
 			if ((*p)->Data < D)
 			{
 				insertBB(&(*p)->right, D);
-				if (VR = true)
+				if (VR == true)
 				{
 					(*p)->Balance = 1;
 					VR = false;
@@ -592,6 +593,10 @@ void insertBB(node **p, INT32 D)
 							VR = true;
 							HR = false;
 						}
+						else
+						{
+							HR = false;
+						}
 					}
 				}
 			}
@@ -599,3 +604,4 @@ void insertBB(node **p, INT32 D)
 
 	}
 }
+
