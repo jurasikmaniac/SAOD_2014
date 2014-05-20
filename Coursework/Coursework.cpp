@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "rusmenu.h"
 #include "AVLtree.h"
+//#include <iostream>
+//#include <conio.h>
 
 FILE *fi;
 //флаг сортировки
@@ -122,6 +124,7 @@ void showQueue(T_Queue &queue)
 	printf_s("\n%s\n", TextMenuId[5]);
 	while (p != NULL) {
 		printf_s("%s", p->data->fio);
+		//std::cout << (short)(0x00FF & p->data->fio[0] ) << std::endl;
 		printf_s("%03d\t", p->data->numUnit);
 		printf_s("%s\t", p->data->job);
 		printf_s("%s\n", p->data->dob);

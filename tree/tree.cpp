@@ -10,15 +10,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetLoc(1251);
 	node* root = NULL;
 	nodeAVL* rootAVL = NULL;
-	
+	int wes = 0;
+	int pp = 0;
 	int arr[10000], n,key, comp = 0;
 	while (true)
 	{
 
-		puts("1 лаба");/////
+		puts("1 лаба");
 		puts("2 лаба");
 		puts("3 лаба");
 		puts("4 лаба");
+		puts("5 лаба");
 		puts("0 выход");
 		
 		switch (_getch())
@@ -132,6 +134,30 @@ int _tmain(int argc, _TCHAR* argv[])
 			show(root1);
 			freetree(root1);
 			root1 = NULL;
+			system("pause");
+			break;
+		case '5':
+			srand(time(NULL));
+			//AVL
+			puts("Введите число вершин дерева");
+			n = 0;
+			scanf_s("%d", &n);
+			root = A1(root, n, arr);
+			
+			show(root);
+			freetree(root);
+			root = NULL;
+
+			root = A2(root, 0, n-1, arr);
+			for (int i = 0; i < n; i++)
+			{
+				wes = wes + arr[i];
+			}
+			meanWH(root, 1, pp, arr);
+			printf_s("\nСредневзвешенная высота = %6.3f\n", (float)pp / wes);
+			show(root);
+			freetree(root);
+			root = NULL;
 			system("pause");
 			break;
 		case '0': return 0;

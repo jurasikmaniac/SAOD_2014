@@ -605,5 +605,80 @@ void insertBB(node **p, INT32 D)
 	}
 }
 
+//Сумма P
+INT32 meanWH(node* p, INT32 l, int &pp,int *arr)
+{
+	if (!p)
+	{
+		return 0;
+	}
+	else
+	{
+		
+		pp = pp + l*arr[p->Data];
+		//printf_s("\npp=%d высота вершины=%d arr[%d]=%d", pp, l, p->Data, arr[p->Data]);
+		return l + meanWH(p->left, l + 1, pp, arr) + meanWH(p->right, l + 1, pp, arr);
+	}
+}
+//A1
+node * A1(node *root, int size, int *arr)
+{
+	bool use[400];
+	int max = 0;
+	int index = 0;
+	int pp = 0;
+	int W = 0;
+	for (int i = 0; i < size; i++)
+	{
+		use[i] = false;
+	}
+	for (int i = 0; i < size; i++)
+	{
+		arr[i] = 1 + rand() % 100;
+		W = W + arr[i];
+	}
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			if (arr[j] >= max && use[j] == false)
+			{
+				max = arr[j];
+				index = j;
+			}
+		}
+		use[index] = true;
+		root = insert(root, index);
+		max = 0;
+	}
+	meanWH(root, 1, pp, arr);
+	
+	printf_s("\nСредневзвешенная высота = %6.3f\n", (float)pp / W);
+	return root;
+}
 
+node * A2(node *root, int L, int R, int *arr)
+{
+	int wes = 0;
+	int summa = 0;
+	int i = 0;
+	if (L <= R)
+	{
+		for ( i = L; i < R; i++)
+		{
+			wes = wes + arr[i];
+		}
+		for ( i = L; i < R; i++)
+		{
+			if (summa < wes / 2 && summa + arr[i] >= wes / 2)break;
+			summa = summa + arr[i];
+			
+		}
+		root=insert(root, i);
+		A2(root, L, i - 1,arr);
+		A2(root, i + 1, R,arr);
+			
+	}
+	return root;
+}
 
