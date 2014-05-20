@@ -15,7 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (true)
 	{
 
-		puts("1 лаба");
+		puts("1 лаба");/////
 		puts("2 лаба");
 		puts("3 лаба");
 		puts("4 лаба");
